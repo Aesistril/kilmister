@@ -29,17 +29,16 @@ static void activate(AdwApplication *app, gpointer user_data) {
 
     g_signal_connect(print_button, "clicked", G_CALLBACK(on_button_clicked), NULL);
 
-
     lemmy_instance_domain = "lemmy.world";
     
-    // char twofa[7];
-    // printf("2fa token: ");
-    // fgets(twofa, 7, stdin);
+    char twofa[7];
+    printf("2fa token: ");
+    fgets(twofa, 7, stdin);
     
-
-    // if(resp) {
-    //     printf("%s\n", resp);
-    // }
+    
+    if(login_creds.jwt != NULL) {
+        printf("%s\n", login_creds.jwt);
+    }
 
     // set and summon the main window
     gtk_window_set_application(GTK_WINDOW(mainwin), GTK_APPLICATION(app));

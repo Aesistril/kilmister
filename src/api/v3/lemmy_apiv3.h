@@ -1,6 +1,14 @@
 #ifndef LEMMY_APIV3_H
 #define LEMMY_APIV3_H
 
-char* lemmyv3_login(char *username_or_email, char *password,  char *totp_2fa_token);
+#include <stdbool.h>
+
+typedef struct Lemmyv3Login_t {
+    char *jwt;
+    bool registration_created;
+    bool verify_email_sent;
+} Lemmyv3Login_t;
+
+Lemmyv3Login_t lemmyv3_login(char *username_or_email, char *password,  char *totp_2fa_token);
 
 #endif
