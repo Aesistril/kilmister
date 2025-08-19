@@ -1,0 +1,11 @@
+{
+    "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
+    "C_Cpp.default.compileCommands": "build/compile_commands.json",
+    "files.associations": {
+        "adwaita.h": "c",
+        "gtk.h": "c",
+        "drawui.h": "c",
+        "stdio.h": "c",
+        "fileio_common.h": "c"
+    }
+}

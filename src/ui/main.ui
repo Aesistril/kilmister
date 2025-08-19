@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.96.1 -->
+<interface>
+  <!-- interface-name main.ui -->
+  <requires lib="libadwaita" version="1.7"/>
+  <requires lib="gtk" version="4.6"/>
+  <object class="AdwWindow">
+    <property name="content">
+      <object class="AdwViewStack" id="topstack">
+        <child>
+          <object class="AdwViewStackPage" id="mainpage">
+            <property name="child">
+              <object class="AdwToolbarView">
+                <property name="content">
+                  <object class="AdwViewStack" id="mp_stack">
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Empty Page</property>
+                          </object>
+                        </property>
+                        <property name="title">All</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwViewStackPage">
+                        <property name="child">
+                          <object class="GtkLabel">
+                            <property name="label">Empty Page</property>
+                          </object>
+                        </property>
+                        <property name="title">Local</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <child type="top">
+                  <object class="AdwHeaderBar" id="mp_header">
+                    <property name="title-widget">
+                      <object class="AdwViewSwitcher">
+                        <property name="policy">wide</property>
+                        <property name="stack">mp_stack</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child type="bottom">
+                  <object class="AdwViewSwitcherBar" id="mp_switcher_bar">
+                    <property name="stack">mp_stack</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage" id="loginpage">
+            <property name="child">
+              <object class="GtkLabel">
+                <property name="label">Empty Page</property>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="default-height">500</property>
+    <property name="default-width">700</property>
+    <child>
+      <object class="AdwBreakpoint">
+        <!-- Custom object fragments -->
+        <condition>max-width: 550sp</condition>
+        <setter object="mp_switcher_bar" property="reveal">True</setter>
+        <setter object="mp_header" property="title-widget"/>
+      </object>
+    </child>
+  </object>
+</interface>
