@@ -1,3 +1,16 @@
+// Kilmister Client -- A lemmy client for GTK desktops and mobile devices
+// Copyright (C) 2025-2026
+
+// This file is part of Kilmister Client.
+// Kilmister Client is free software: you can redistribute it and/or modify it under the terms of 
+// the GNU General Public License as published by the Free Software Foundation, either version 
+// 3 of the License, or (at your option) any later version.
+// Kilmister Client is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+// without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// See the GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License along with Kilmister Client. 
+// If not, see <https://www.gnu.org/licenses/>. 
+
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <adwaita.h>
@@ -6,40 +19,20 @@
 #include "glib-object.h"
 #include "gtk/gtkshortcut.h"
 #include <stdio.h>
+#include "import_ui.h"
+#include "signals_gui.h"
 
-#define LEMMY_API_V3
-#include "api/lemmy.h"
-
-GtkWindow* mainwin;
-GtkButton* print_button;
-
-static void on_button_clicked(GtkWidget *header_bar, gpointer data) {
-    g_print(" clicked\n");
-}
 
 static void activate(AdwApplication *app, gpointer user_data) {
     GtkBuilder *builder = gtk_builder_new();
     gtk_builder_add_from_file(builder, "/home/ae/Projects/C/kilmister/src/ui/main.ui", NULL);
 
     // import some objects from ui definition
-    mainwin = GTK_WINDOW(gtk_builder_get_object(builder, "mainwin"));
-    AdwHeaderBar* header_bar = ADW_HEADER_BAR(gtk_builder_get_object(builder, "header_bar"));
-    print_button = GTK_BUTTON(gtk_builder_get_object(builder, "print_button"));
+    import_ui_def(builder);
     g_object_unref(builder);
 
-    g_signal_connect(print_button, "clicked", G_CALLBACK(on_button_clicked), NULL);
-
-    lemmy_instance_domain = "lemmy.world";
+    g_signal_connect(login_button, "clicked", G_CALLBACK(launch_nonblocking), login_button_worker);
     
-    char twofa[7];
-    printf("2fa token: ");
-    fgets(twofa, 7, stdin);
-    
-    
-    if(login_creds.jwt != NULL) {
-        printf("%s\n", login_creds.jwt);
-    }
-
     // set and summon the main window
     gtk_window_set_application(GTK_WINDOW(mainwin), GTK_APPLICATION(app));
     gtk_window_present(GTK_WINDOW(mainwin));

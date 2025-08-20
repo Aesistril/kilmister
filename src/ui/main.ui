@@ -2,11 +2,84 @@
 <!-- Created with Cambalache 0.96.1 -->
 <interface>
   <!-- interface-name main.ui -->
-  <requires lib="libadwaita" version="1.7"/>
   <requires lib="gtk" version="4.6"/>
-  <object class="AdwWindow">
+  <requires lib="libadwaita" version="1.7"/>
+  <object class="AdwWindow" id="mainwin">
     <property name="content">
       <object class="AdwViewStack" id="topstack">
+        <child>
+          <object class="AdwViewStackPage" id="loginpage">
+            <property name="child">
+              <object class="AdwToolbarView">
+                <property name="content">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="css-classes">title-1</property>
+                        <property name="label">Welcome to Kilmister Client</property>
+                        <property name="margin-top">15</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwClamp">
+                        <child>
+                          <object class="GtkListBox">
+                            <property name="css-classes">boxed-list</property>
+                            <property name="margin-top">20</property>
+                            <property name="selection-mode">none</property>
+                            <child>
+                              <object class="AdwEntryRow" id="login_instance_field">
+                                <property name="text">lemmy.world</property>
+                                <property name="title">Instance Domain</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwEntryRow" id="login_user_field">
+                                <property name="title">Username or E-Mail</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwPasswordEntryRow" id="login_pass_field">
+                                <property name="title">Password  </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwEntryRow" id="login_totp_field">
+                                <property name="title">TOTP (leave empty if not enabled)</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="login_button">
+                        <property name="css-classes">pill
+suggested-action</property>
+                        <property name="halign">center</property>
+                        <property name="label">Login</property>
+                        <property name="margin-top">20</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="login_remembercheck">
+                        <property name="halign">center</property>
+                        <property name="label">  Remember me</property>
+                        <property name="margin-top">10</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <child type="top">
+                  <object class="AdwHeaderBar">
+                    <property name="show-title">False</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
         <child>
           <object class="AdwViewStackPage" id="mainpage">
             <property name="child">
@@ -50,15 +123,6 @@
                     <property name="stack">mp_stack</property>
                   </object>
                 </child>
-              </object>
-            </property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwViewStackPage" id="loginpage">
-            <property name="child">
-              <object class="GtkLabel">
-                <property name="label">Empty Page</property>
               </object>
             </property>
           </object>

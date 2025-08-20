@@ -11,24 +11,30 @@
 // You should have received a copy of the GNU General Public License along with Kilmister Client. 
 // If not, see <https://www.gnu.org/licenses/>. 
 
-#include "api/request.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "libsecret/secret.h"
 
-// account/auth/login 
-// Log into Lemmy
-char* lemmyv4_login(char *username_or_email, char *password,  char *totp_2fa_token) {
-    size_t len = 69
-           + strlen(totp_2fa_token)
-           + strlen(password)
-           + strlen(username_or_email)
-           + 1;
+#define KILMISTER_SCHEMA kilmister_get_schema ()
 
-    char *payload = malloc(len);
+const SecretSchema *kilmister_get_schema (void) {
+    static const SecretSchema schema = {
+        "com.aesistril.kilmister", SECRET_SCHEMA_NONE,
+        {
+            {"jwt", SECRET_SCHEMA_ATTRIBUTE_STRING},
+        }
+    };
 
-    snprintf(payload, len, "{\"totp_2fa_token\": \"%s\",\"password\": \"%s\",\"username_or_email\": \"%s\"}", 
-        totp_2fa_token, password, username_or_email);
-
-    return lemmy_api_call("POST", "v4/account/auth/login", NULL, payload);
+    return &schema;
 }
+
+static void on_password_stored (GObject *source, GAsyncResult *result, gpointer unused) {
+    GError *error = NULL;
+
+    secret_password_store_finish (result, &error);
+    if (error != NULL) {
+        /* ... handle the failure here */
+        g_error_free (error);
+    } else {
+        /* ... do something now that the password has been stored */
+    }
+}
+

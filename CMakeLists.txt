@@ -1,22 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
-project(Kilmister VERSION 1.0 LANGUAGES C)
-
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-
 # pkg-config packages
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK4 REQUIRED gtk4)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(LIBADWAITA REQUIRED libadwaita-1)
 pkg_check_modules(CURL REQUIRED libcurl)
+pkg_check_modules(CJSON REQUIRED libcjson)
+pkg_check_modules(LIBSECRET REQUIRED libsecret-1)
 
 include_directories(
     ${GTK4_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
     ${LIBADWAITA_INCLUDE_DIRS}
     ${CURL_INCLUDE_DIRS}
+    ${CJSON_INCLUDE_DIRS}
+    ${LIBSECRET_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -25,6 +22,8 @@ link_directories(
     ${GLIB_LIBRARY_DIRS}
     ${LIBADWAITA_LIBRARY_DIRS}
     ${CURL_LIBRARY_DIRS}
+    ${CJSON_LIBRARY_DIRS}
+    ${LIBSECRET_LIBRARY_DIRS}
 )
 
 add_definitions(
@@ -32,10 +31,15 @@ add_definitions(
     ${GLIB_CFLAGS_OTHER}
     ${LIBADWAITA_CFLAGS_OTHER}
     ${CURL_CFLAGS_OTHER}
+    ${CJSON_CFLAGS_OTHER}
+    ${LIBSECRET_CFLAGS_OTHER}
 )
 
 set(SOURCES
     src/main.c
+    src/creds.c
+    src/import_ui.c
+    src/signals_gui.c
     src/api/request.c
     src/api/v3/auth.c
     src/api/v4/auth.c
@@ -48,6 +52,8 @@ target_link_libraries(Kilmister
     ${GLIB_LIBRARIES}
     ${LIBADWAITA_LIBRARIES}
     ${CURL_LIBRARIES}
+    ${CJSON_LIBRARIES}
+    ${LIBSECRET_LIBRARIES}
 )
 
 # Copy UI files

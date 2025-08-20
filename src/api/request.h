@@ -3,7 +3,8 @@
 
 #include <stddef.h>
 
-extern char* lemmy_instance_domain;
+extern const char* lemmy_instance_domain;
+extern const char* lemmy_jwt;
 
 struct memory {
     char *response;
