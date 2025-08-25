@@ -6,127 +6,166 @@
   <requires lib="libadwaita" version="1.7"/>
   <object class="AdwWindow" id="mainwin">
     <property name="content">
-      <object class="AdwViewStack" id="topstack">
-        <child>
-          <object class="AdwViewStackPage" id="loginpage">
-            <property name="child">
-              <object class="AdwToolbarView">
-                <property name="content">
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="css-classes">title-1</property>
-                        <property name="label">Welcome to Kilmister Client</property>
-                        <property name="margin-top">15</property>
+      <object class="AdwToastOverlay" id="toast_overlay">
+        <property name="child">
+          <object class="AdwViewStack" id="topstack">
+            <child>
+              <object class="AdwViewStackPage" id="spinnerpage">
+                <property name="child">
+                  <object class="AdwToolbarView">
+                    <property name="content">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="valign">center</property>
+                        <child>
+                          <object class="AdwSpinner">
+                            <property name="height-request">100</property>
+                            <property name="hexpand">True</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label"> </property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                    <child type="top">
+                      <object class="AdwHeaderBar">
+                        <property name="show-title">False</property>
                       </object>
                     </child>
-                    <child>
-                      <object class="AdwClamp">
+                  </object>
+                </property>
+                <property name="name">spinnerpage</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwViewStackPage" id="loginpage">
+                <property name="child">
+                  <object class="AdwToolbarView">
+                    <property name="content">
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkListBox">
-                            <property name="css-classes">boxed-list</property>
-                            <property name="margin-top">20</property>
-                            <property name="selection-mode">none</property>
+                          <object class="GtkLabel">
+                            <property name="css-classes">title-1</property>
+                            <property name="label">Welcome to Kilmister Client</property>
+                            <property name="margin-top">15</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwClamp">
                             <child>
-                              <object class="AdwEntryRow" id="login_instance_field">
-                                <property name="text">lemmy.world</property>
-                                <property name="title">Instance Domain</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwEntryRow" id="login_user_field">
-                                <property name="title">Username or E-Mail</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwPasswordEntryRow" id="login_pass_field">
-                                <property name="title">Password  </property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="AdwEntryRow" id="login_totp_field">
-                                <property name="title">TOTP (leave empty if not enabled)</property>
+                              <object class="GtkListBox">
+                                <property name="css-classes">boxed-list</property>
+                                <property name="margin-top">20</property>
+                                <property name="selection-mode">none</property>
+                                <child>
+                                  <object class="AdwEntryRow" id="login_instance_field">
+                                    <property name="text">lemmy.world</property>
+                                    <property name="title">Instance Domain</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwEntryRow" id="login_user_field">
+                                    <property name="title">Username or E-Mail</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwPasswordEntryRow" id="login_pass_field">
+                                    <property name="title">Password  </property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="AdwEntryRow" id="login_totp_field">
+                                    <property name="title">TOTP (leave empty if not enabled)</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="login_button">
-                        <property name="css-classes">pill
+                        <child>
+                          <object class="GtkButton" id="login_button">
+                            <property name="css-classes">pill
 suggested-action</property>
-                        <property name="halign">center</property>
-                        <property name="label">Login</property>
-                        <property name="margin-top">20</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="login_remembercheck">
-                        <property name="halign">center</property>
-                        <property name="label">  Remember me</property>
-                        <property name="margin-top">10</property>
-                      </object>
-                    </child>
-                  </object>
-                </property>
-                <child type="top">
-                  <object class="AdwHeaderBar">
-                    <property name="show-title">False</property>
-                  </object>
-                </child>
-              </object>
-            </property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwViewStackPage" id="mainpage">
-            <property name="child">
-              <object class="AdwToolbarView">
-                <property name="content">
-                  <object class="AdwViewStack" id="mp_stack">
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="child">
-                          <object class="GtkLabel">
-                            <property name="label">Empty Page</property>
+                            <property name="halign">center</property>
+                            <property name="label">Login</property>
+                            <property name="margin-top">20</property>
                           </object>
-                        </property>
-                        <property name="title">All</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="AdwViewStackPage">
-                        <property name="child">
-                          <object class="GtkLabel">
-                            <property name="label">Empty Page</property>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="login_remembercheck">
+                            <property name="halign">center</property>
+                            <property name="label">  Remember me</property>
+                            <property name="margin-top">10</property>
                           </object>
-                        </property>
-                        <property name="title">Local</property>
-                      </object>
-                    </child>
-                  </object>
-                </property>
-                <child type="top">
-                  <object class="AdwHeaderBar" id="mp_header">
-                    <property name="title-widget">
-                      <object class="AdwViewSwitcher">
-                        <property name="policy">wide</property>
-                        <property name="stack">mp_stack</property>
+                        </child>
                       </object>
                     </property>
+                    <child type="top">
+                      <object class="AdwHeaderBar">
+                        <property name="show-title">False</property>
+                      </object>
+                    </child>
                   </object>
-                </child>
-                <child type="bottom">
-                  <object class="AdwViewSwitcherBar" id="mp_switcher_bar">
-                    <property name="stack">mp_stack</property>
-                  </object>
-                </child>
+                </property>
+                <property name="name">loginpage</property>
               </object>
-            </property>
+            </child>
+            <child>
+              <object class="AdwViewStackPage" id="mainpage">
+                <property name="child">
+                  <object class="AdwToolbarView">
+                    <property name="content">
+                      <object class="AdwViewStack" id="mp_stack">
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label">Empty Page</property>
+                              </object>
+                            </property>
+                            <property name="title">All</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwViewStackPage">
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label">Empty Page</property>
+                              </object>
+                            </property>
+                            <property name="title">Local</property>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                    <child type="top">
+                      <object class="AdwHeaderBar" id="mp_header">
+                        <property name="title-widget">
+                          <object class="AdwViewSwitcher">
+                            <property name="policy">wide</property>
+                            <property name="stack">mp_stack</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child type="bottom">
+                      <object class="AdwViewSwitcherBar" id="mp_switcher_bar">
+                        <property name="stack">mp_stack</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <property name="name">mainpage</property>
+              </object>
+            </child>
           </object>
-        </child>
+        </property>
       </object>
     </property>
     <property name="default-height">500</property>

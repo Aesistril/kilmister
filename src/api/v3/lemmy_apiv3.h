@@ -9,6 +9,6 @@ typedef struct Lemmyv3Login_t {
     bool verify_email_sent;
 } Lemmyv3Login_t;
 
-Lemmyv3Login_t lemmyv3_login(const char *username_or_email, const char *password, const char *totp_2fa_token);
+Lemmyv3Login_t* lemmyv3_login(const char *username_or_email, const char *password, const char *totp_2fa_token);
 
 #endif

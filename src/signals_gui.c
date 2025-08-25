@@ -16,16 +16,18 @@
 #include <adwaita.h>
 #include <curl/curl.h>
 #include "api/request.h"
+#include "api/v3/lemmy_apiv3.h"
 #include "gtk/gtkshortcut.h"
 #include <stdio.h>
 #include "signals_gui.h"
 #include "import_ui.h"
+#include "creds.h"
 
 #define LEMMY_API_V3
 #include "api/lemmy.h"
 
 
-gpointer login_button_worker(gpointer data) {
+void login_button_worker(gpointer data) {
     WorkerData *wdata = data;
 
     lemmy_instance_domain = gtk_editable_get_text(GTK_EDITABLE(login_instance_field));
@@ -33,16 +35,44 @@ gpointer login_button_worker(gpointer data) {
     // heap allocated pointer to LemmyLogin_t
     wdata->res = lemmy_login(gtk_editable_get_text(GTK_EDITABLE(login_user_field)),
                             gtk_editable_get_text(GTK_EDITABLE(login_pass_field)),
-                            gtk_editable_get_text(GTK_EDITABLE(login_totp_field))).jwt;
+                            gtk_editable_get_text(GTK_EDITABLE(login_totp_field)));
 
+    LemmyLogin_t* login = (LemmyLogin_t*) wdata->res;
+
+    if (login->jwt == NULL) {
+        toast_printf(toast_overlay, "Couldn't login to lemmy");
+        g_main_loop_quit(wdata->loop);
+        return;
+    }
+
+    // if remember me is checked.
     if(gtk_check_button_get_active(login_remembercheck)) {
-        // libsecret save
+        creds_store(lemmy_instance_domain, login->jwt);
     }
 
     // Quit nested loop once done
     g_main_loop_quit(wdata->loop);
-    return NULL;
+    return;
 }
+
+void creds_try_login(gpointer data) {
+    WorkerData *wdata = data;
+
+    lemmy_instance_domain = ""; // non NULL value?
+    creds_get(lemmy_instance_domain);
+    
+    if (lemmy_instance_domain == NULL || lemmy_jwt == NULL) {
+        adw_view_stack_set_visible_child_name(topstack, "loginpage");
+        g_main_loop_quit(wdata->loop);
+        return;
+    }
+
+    // TODO: Actually test the JWT
+    adw_view_stack_set_visible_child_name(topstack, "mainpage");
+    g_main_loop_quit(wdata->loop);
+    return;
+}
+
 
 void launch_nonblocking(GtkWidget *widget, gpointer function) {
     WorkerData data = {0};
@@ -55,8 +85,6 @@ void launch_nonblocking(GtkWidget *widget, gpointer function) {
     g_main_loop_run(data.loop);
 
     // Worker done
-    g_print("Worker result: %s\n", data.res);
     g_free(data.res);
     g_main_loop_unref(data.loop);
-    
 }

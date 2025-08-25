@@ -13,7 +13,13 @@ extern AdwEntryRow* login_user_field;
 extern AdwEntryRow* login_pass_field;
 extern AdwEntryRow* login_totp_field;
 extern GtkCheckButton* login_remembercheck;
+extern AdwToastOverlay* toast_overlay;
+extern AdwViewStackPage* spinnerpage;
+extern AdwViewStackPage* loginpage;
+extern AdwViewStackPage* mainpage;
+extern AdwViewStack* topstack;
 
 void import_ui_def(GtkBuilder *builder);
+void toast_printf(AdwToastOverlay* overlay, const char *fmt, ...);
 
 #endif

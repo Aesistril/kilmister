@@ -1,40 +1,87 @@
-// Kilmister Client -- A lemmy client for GTK desktops and mobile devices
-// Copyright (C) 2025-2026
+// This is shamelessly copied from AI. It is the only piece of AI
+// code in this project because I am VERY FRUSTRATED with the 
+// libsecret docs. I tried doing this the legit way for hours but the 
+// entry just wouldn't show up in seahorse.
+//
+// I do have a simple understanding of how libsecret works with schemas and whatnot.
+// This should be all I need for doing the simplest task this library is designed for.
+// I am not reading the entirety of libsecret docs.
+// I am not wasting any more time going around weird contraptions just to 
+// do the simple act of storing a password in a keyring.
+//
+// Below code was written ~60% by a clanker and restructured by me to fit
+// into this project.
 
-// This file is part of Kilmister Client.
-// Kilmister Client is free software: you can redistribute it and/or modify it under the terms of 
-// the GNU General Public License as published by the Free Software Foundation, either version 
-// 3 of the License, or (at your option) any later version.
-// Kilmister Client is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-// without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-// See the GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License along with Kilmister Client. 
-// If not, see <https://www.gnu.org/licenses/>. 
+// May the light of UNIX find you, you heathens.
 
-#include "libsecret/secret.h"
+#include "adwaita.h"
+#include "api/request.h"
+#include "import_ui.h"
+#include "signals_gui.h"
+#include <glib.h>
+#include <libsecret/secret.h>
+#include <stdio.h>
 
-#define KILMISTER_SCHEMA kilmister_get_schema ()
+#define SCHEMA_NAME "com.aesistril.kilmister"
 
-const SecretSchema *kilmister_get_schema (void) {
-    static const SecretSchema schema = {
-        "com.aesistril.kilmister", SECRET_SCHEMA_NONE,
-        {
-            {"jwt", SECRET_SCHEMA_ATTRIBUTE_STRING},
-        }
-    };
+// Add "instance" attribute
+static const SecretSchema schema = {
+    SCHEMA_NAME,
+    SECRET_SCHEMA_NONE,
+    {
+        { "instance", SECRET_SCHEMA_ATTRIBUTE_STRING },
+        { NULL, 0 },
+    }
+};
 
-    return &schema;
-}
-
-static void on_password_stored (GObject *source, GAsyncResult *result, gpointer unused) {
+// Callback for storing password
+static void store_password_cb(GObject *source_object, GAsyncResult *res, gpointer user_data) {
     GError *error = NULL;
-
-    secret_password_store_finish (result, &error);
-    if (error != NULL) {
-        /* ... handle the failure here */
-        g_error_free (error);
+    if (!secret_password_store_finish(res, &error)) {
+        toast_printf(toast_overlay, "Failed to store login: %s", error->message);
+        g_error_free(error);
     } else {
-        /* ... do something now that the password has been stored */
+        toast_printf(toast_overlay, "Login stored successfully");
     }
 }
 
+// Callback for retrieving password
+static void get_password_cb(GObject *source_object, GAsyncResult *res, gpointer user_data) {
+    GError *error = NULL;
+    gchar *password = secret_password_lookup_finish(res, &error);
+
+    if (error != NULL) {
+        toast_printf(toast_overlay, "Failed to get saved login: %s", error->message);
+        g_error_free(error);
+        return;
+    }
+
+    if (password != NULL) {
+        lemmy_jwt = password; // Do NOT call secret_password_free(password) here
+        toast_printf(toast_overlay, "Password retrieved successfully");
+    } else {
+        toast_printf(toast_overlay, "No password found for this instance");
+    }
+}
+// Store credentials for a specific instance
+void creds_store(const char *instance, const char *cred) {
+    secret_password_store(&schema,
+                          SECRET_COLLECTION_DEFAULT,
+                          "Lemmy Auth Creds",
+                          cred,
+                          NULL, // cancellable
+                          store_password_cb,
+                          NULL,
+                          "instance", instance,
+                          NULL);
+}
+
+// Retrieve credentials for a specific instance
+void creds_get(const char *instance) {
+    secret_password_lookup(&schema,
+                           NULL, // cancellable
+                           get_password_cb,
+                           NULL,
+                           "instance", instance,
+                           NULL);
+}

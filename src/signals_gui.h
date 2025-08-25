@@ -10,7 +10,8 @@ typedef struct {
     void *res;
 } WorkerData;
 
-gpointer login_button_worker(gpointer data);
+void login_button_worker(gpointer data);
 void launch_nonblocking(GtkWidget *widget, gpointer function);
+void creds_try_login(gpointer data);
 
 #endif

@@ -15,12 +15,12 @@
 #include <gtk/gtk.h>
 #include <adwaita.h>
 #include <curl/curl.h>
-#include "api/request.h"
 #include "glib-object.h"
 #include "gtk/gtkshortcut.h"
 #include <stdio.h>
 #include "import_ui.h"
 #include "signals_gui.h"
+#include "creds.h"
 
 
 static void activate(AdwApplication *app, gpointer user_data) {
@@ -32,6 +32,9 @@ static void activate(AdwApplication *app, gpointer user_data) {
     g_object_unref(builder);
 
     g_signal_connect(login_button, "clicked", G_CALLBACK(launch_nonblocking), login_button_worker);
+
+    // When you see this function used like this, keep in mind mainwin is passed as a dummy.
+    launch_nonblocking(GTK_WIDGET(mainwin), creds_try_login);
     
     // set and summon the main window
     gtk_window_set_application(GTK_WINDOW(mainwin), GTK_APPLICATION(app));

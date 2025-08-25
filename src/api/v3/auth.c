@@ -23,7 +23,7 @@
 // account/auth/login 
 // Log into Lemmy
 // Lemmyv3Login_t.jwt is NULL if fails, booleans initialized as false
-Lemmyv3Login_t lemmyv3_login(const char *username_or_email, const char *password, const char *totp_2fa_token) {
+Lemmyv3Login_t* lemmyv3_login(const char *username_or_email, const char *password, const char *totp_2fa_token) {
     size_t len = 69
            + strlen(totp_2fa_token)
            + strlen(password)
@@ -41,19 +41,19 @@ Lemmyv3Login_t lemmyv3_login(const char *username_or_email, const char *password
     cJSON *json_registration_created = cJSON_GetObjectItemCaseSensitive(json, "registration_created");
     cJSON *json_verify_email_sent = cJSON_GetObjectItemCaseSensitive(json, "verify_email_sent");
     
-    Lemmyv3Login_t res;
-    res.jwt = NULL;
-    res.registration_created = false;
-    res.verify_email_sent = false;
+    Lemmyv3Login_t *res = malloc(sizeof(Lemmyv3Login_t));
+    res->jwt = NULL;
+    res->registration_created = false;
+    res->verify_email_sent = false;
 
     if(cJSON_IsString(json_jwt) && json_jwt->valuestring != NULL) {
-        res.jwt = strdup(json_jwt->valuestring);
+        res->jwt = strdup(json_jwt->valuestring);
     }
     if(cJSON_IsBool(json_registration_created)) {
-        res.registration_created = cJSON_IsTrue(json_registration_created);
+        res->registration_created = cJSON_IsTrue(json_registration_created);
     }
     if(cJSON_IsBool(json_verify_email_sent)) {
-        res.verify_email_sent = cJSON_IsTrue(json_verify_email_sent);
+        res->verify_email_sent = cJSON_IsTrue(json_verify_email_sent);
     }
 
     free(resp);
