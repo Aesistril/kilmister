@@ -15,13 +15,14 @@
 #include <gtk/gtk.h>
 #include <adwaita.h>
 #include <curl/curl.h>
+#include "api/request.h"
+#include "config.h"
 #include "glib-object.h"
 #include "gtk/gtkshortcut.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "import_ui.h"
 #include "signals_gui.h"
-#include "creds.h"
-
 
 static void activate(AdwApplication *app, gpointer user_data) {
     GtkBuilder *builder = gtk_builder_new();
@@ -31,10 +32,16 @@ static void activate(AdwApplication *app, gpointer user_data) {
     import_ui_def(builder);
     g_object_unref(builder);
 
-    g_signal_connect(login_button, "clicked", G_CALLBACK(launch_nonblocking), login_button_worker);
+    g_signal_connect(login_button, "clicked", G_CALLBACK(launch_nonblocking_nodata), login_button_worker);
+
+    kilconfig_checkcreate();
+    kilconfig = malloc(sizeof(kilmister_config));
+    kilconfig_load(kilconfig);
+    
+    lemmy_instance_domain = kilconfig->instance;
 
     // When you see this function used like this, keep in mind mainwin is passed as a dummy.
-    launch_nonblocking(GTK_WIDGET(mainwin), creds_try_login);
+    launch_nonblocking_nodata(GTK_WIDGET(mainwin), creds_try_login);
     
     // set and summon the main window
     gtk_window_set_application(GTK_WINDOW(mainwin), GTK_APPLICATION(app));

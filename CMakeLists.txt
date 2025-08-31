@@ -6,6 +6,7 @@ pkg_check_modules(LIBADWAITA REQUIRED libadwaita-1)
 pkg_check_modules(CURL REQUIRED libcurl)
 pkg_check_modules(CJSON REQUIRED libcjson)
 pkg_check_modules(LIBSECRET REQUIRED libsecret-1)
+pkg_check_modules(LIBCONFIG REQUIRED libconfig)
 
 include_directories(
     ${GTK4_INCLUDE_DIRS}
@@ -14,6 +15,7 @@ include_directories(
     ${CURL_INCLUDE_DIRS}
     ${CJSON_INCLUDE_DIRS}
     ${LIBSECRET_INCLUDE_DIRS}
+    ${LIBCONFIG_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -23,6 +25,7 @@ link_directories(
     ${LIBADWAITA_LIBRARY_DIRS}
     ${CURL_LIBRARY_DIRS}
     ${CJSON_LIBRARY_DIRS}
+    ${LIBCONFIG_LIBRARY_DIRS}
     ${LIBSECRET_LIBRARY_DIRS}
 )
 
@@ -33,11 +36,13 @@ add_definitions(
     ${CURL_CFLAGS_OTHER}
     ${CJSON_CFLAGS_OTHER}
     ${LIBSECRET_CFLAGS_OTHER}
+    ${LIBCONFIG_CFLAGS_OTHER}
 )
 
 set(SOURCES
     src/main.c
     src/creds.c
+    src/config.c
     src/import_ui.c
     src/signals_gui.c
     src/api/request.c
@@ -54,6 +59,7 @@ target_link_libraries(Kilmister
     ${CURL_LIBRARIES}
     ${CJSON_LIBRARIES}
     ${LIBSECRET_LIBRARIES}
+    ${LIBCONFIG_LIBRARIES}
 )
 
 # Copy UI files

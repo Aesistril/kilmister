@@ -14,10 +14,8 @@
 
 // May the light of UNIX find you, you heathens.
 
-#include "adwaita.h"
 #include "api/request.h"
 #include "import_ui.h"
-#include "signals_gui.h"
 #include <glib.h>
 #include <libsecret/secret.h>
 #include <stdio.h>
@@ -29,7 +27,6 @@ static const SecretSchema schema = {
     SCHEMA_NAME,
     SECRET_SCHEMA_NONE,
     {
-        { "instance", SECRET_SCHEMA_ATTRIBUTE_STRING },
         { NULL, 0 },
     }
 };
@@ -64,7 +61,7 @@ static void get_password_cb(GObject *source_object, GAsyncResult *res, gpointer 
     }
 }
 // Store credentials for a specific instance
-void creds_store(const char *instance, const char *cred) {
+void creds_store(const char *cred) {
     secret_password_store(&schema,
                           SECRET_COLLECTION_DEFAULT,
                           "Lemmy Auth Creds",
@@ -72,16 +69,14 @@ void creds_store(const char *instance, const char *cred) {
                           NULL, // cancellable
                           store_password_cb,
                           NULL,
-                          "instance", instance,
                           NULL);
 }
 
 // Retrieve credentials for a specific instance
-void creds_get(const char *instance) {
+void creds_get() {
     secret_password_lookup(&schema,
                            NULL, // cancellable
                            get_password_cb,
                            NULL,
-                           "instance", instance,
                            NULL);
 }

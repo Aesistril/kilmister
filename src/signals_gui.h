@@ -8,10 +8,11 @@ typedef struct {
     GMainLoop *loop;
     GThreadFunc worker;
     void *res;
+    void *input;
 } WorkerData;
 
 void login_button_worker(gpointer data);
-void launch_nonblocking(GtkWidget *widget, gpointer function);
+void launch_nonblocking_nodata(GtkWidget *widget, gpointer function);
 void creds_try_login(gpointer data);
 
 #endif
