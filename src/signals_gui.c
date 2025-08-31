@@ -21,6 +21,7 @@
 #include "gtk/gtkshortcut.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "signals_gui.h"
 #include "import_ui.h"
 #include "creds.h"
@@ -56,6 +57,9 @@ void login_button_worker(gpointer data) {
         kilconfig_save(kilconfig);
     }
 
+    adw_view_stack_set_visible_child_name(topstack, "mainpage");
+
+
     // Quit nested loop once done
     g_main_loop_quit(wdata->loop);
     return;
@@ -64,7 +68,7 @@ void login_button_worker(gpointer data) {
 // Try logging in with the saved credientials with libsecret. Doesn't take res and input
 void creds_try_login(gpointer data) {
     WorkerData *wdata = data;
-
+    
     // wait until kilconfig loads instance domain
     while(lemmy_instance_domain == NULL);
 
